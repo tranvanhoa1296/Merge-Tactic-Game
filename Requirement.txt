@@ -1,0 +1,13 @@
+Tạo map với 18 ô mỗi bên.
+
+Giao diện người dùng như sau:
+Một button spawn nhân vật khi user click vào sẽ spawn ngẫu nhiên 1 nhân vật trong list nhân vật cho trước vào 18 ô trên. Nhân vật sẽ có 3 mức level và nhiều kiểu khác nhau.
+
+Một button khi user click vào sẽ tiến hành sort và merge 2 nhân vật có cùng kiểu & cùng level lại với nhau. VD: có 4 nhân vật A lv1 => merge thành 2 nhân vật A lv2 => merge tiếp thành 1 nhân vật A lv3. 
+
+Tạo template nhân vật với các chỉ số máu, mana, def, atk, hồi mana 30% trên mỗi đòn đánh hoặc 10% mỗi giây
+
+Mỗi nhân vật có 3 skill set: normal attack, passive & active skill, active skill sử dụng tự động khi mana đạt mốc 100%.
+
+Thiết kế khoảng 6 nhân vật cho tựa game
+
