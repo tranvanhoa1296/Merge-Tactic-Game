@@ -10,21 +10,20 @@ public class Character
     public int mana;
     public int defense;
     public int attack;
-    public float manaRegenPerHit = 0.3f; // Mana được hồi khi đánh trúng mục tiêu
-    public float manaRegenPerSecond = 0.1f; // Mana được hồi mỗi giây
+    public float manaRegenPerHit = 0.3f; 
+    public float manaRegenPerSecond = 0.1f; 
 
-    public SkillSet skills; // Kỹ năng của nhân vật
+    public SkillSet skills; 
 
     public Character(string name, int level)
     {
         this.name = name;
         this.level = level;
-        // Khởi tạo các giá trị cho health, mana, defense, attack
-        // Khởi tạo kỹ năng cho nhân vật
+        
     }
 }
 
-// Lớp đại diện cho một bộ kỹ năng của nhân vật
+
 [System.Serializable]
 public class SkillSet
 {
@@ -40,7 +39,7 @@ public class SkillSet
     }
 }
 
-// Lớp đại diện cho một kỹ năng
+
 [System.Serializable]
 public class Skill
 {

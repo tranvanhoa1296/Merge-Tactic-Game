@@ -486,7 +486,7 @@ MonoBehaviour:
   characterPrefab: {fileID: 1402796800462065011, guid: d9724d191ca60774a8f756ad007b2876, type: 3}
   mainCamera: {fileID: 1553005822}
   spawnAreaWidth: 400
-  spawnAreaHeight: 300
+  spawnAreaHeight: 100
   characterTemplates:
   - {fileID: 11400000, guid: aa4ee62cbf2c4f04192de8e8f7c5092f, type: 2}
   - {fileID: 11400000, guid: 7aa8c926f6a24804cb79c4f4094865da, type: 2}

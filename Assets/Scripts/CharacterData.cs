@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterData : ScriptableObject
 {
     public string characterName;
-    public int level;  // Thêm trường level để phù hợp với mã GameManager
+    public int level;  
     public int baseHealth;
     public int baseMana;
     public int baseDefense;
