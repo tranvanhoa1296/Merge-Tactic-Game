@@ -1,41 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+// Lớp đại diện cho một nhân vật
+[System.Serializable]
 public class Character
 {
-    public enum CharacterType { Type1, Type2, Type3, Type4, Type5, Type6 }
-    public enum CharacterLevel { Level1, Level2, Level3 }
+    public string name;
+    public int level;
+    public int health;
+    public int mana;
+    public int defense;
+    public int attack;
+    public float manaRegenPerHit = 0.3f; // Mana được hồi khi đánh trúng mục tiêu
+    public float manaRegenPerSecond = 0.1f; // Mana được hồi mỗi giây
 
-    public CharacterType Type { get; private set; }
-    public CharacterLevel Level { get; private set; }
-    public int Health { get; set; }
-    public int Mana { get; set; }
-    public int Defense { get; set; }
-    public int Attack { get; set; }
+    public SkillSet skills; // Kỹ năng của nhân vật
 
-    public Character(CharacterType type)
+    public Character(string name, int level)
     {
-        Type = type;
-        Level = CharacterLevel.Level1;
-        Health = Random.Range(50, 150);   
-        Mana = Random.Range(20, 80);      
-        Defense = Random.Range(5, 20);   
-        Attack = Random.Range(10, 30);
+        this.name = name;
+        this.level = level;
+        // Khởi tạo các giá trị cho health, mana, defense, attack
+        // Khởi tạo kỹ năng cho nhân vật
     }
+}
 
-    public void LevelUp()
+// Lớp đại diện cho một bộ kỹ năng của nhân vật
+[System.Serializable]
+public class SkillSet
+{
+    public Skill normalAttack;
+    public Skill passiveSkill;
+    public Skill activeSkill;
+
+    public SkillSet(Skill normalAttack, Skill passiveSkill, Skill activeSkill)
     {
-        if (Level < CharacterLevel.Level3)
-        {
-            Level++;
-            
-            Health += 50;
-            Mana += 25;
-            Defense += 5;
-            Attack += 10;
-        }
+        this.normalAttack = normalAttack;
+        this.passiveSkill = passiveSkill;
+        this.activeSkill = activeSkill;
     }
+}
 
-   
+// Lớp đại diện cho một kỹ năng
+[System.Serializable]
+public class Skill
+{
+    public string name;
+    public int damage;
+
+    public Skill(string name, int damage)
+    {
+        this.name = name;
+        this.damage = damage;
+    }
 }

@@ -1,76 +1,79 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class GameManager : MonoBehaviour
 {
-    public List<Character> characters;
+    public Button spawnButton;
     public GameObject characterPrefab;
-    public CharacterUIManager characterUIManager;
+    public Camera mainCamera; // Reference to the camera
+    public float spawnAreaWidth = 5.0f; // Width of the spawn area on the screen
+    public float spawnAreaHeight = 5.0f; // Height of the spawn area on the screen
+    public List<CharacterData> characterTemplates = new List<CharacterData>();
+    public int maxCharacters = 6; // Số lượng tối đa nhân vật
+
+    private List<Character> spawnedCharacters = new List<Character>();
+    private int characterCount = 0; // Biến đếm số lượng nhân vật đã sinh ra
 
     private void Start()
     {
-        characters = new List<Character>();
+        spawnButton.onClick.AddListener(SpawnCharacter);
     }
 
-    public void SpawnCharacter()
+    private void SpawnCharacter()
     {
-        // Chỉ tạo mới nhân vật nếu số lượng chưa đạt 6
-        if (characters.Count < 6)
+        if (characterCount < maxCharacters)
         {
-            for (int i = characters.Count; i < 6; i++)
-            {
-                Character.CharacterType randomType = (Character.CharacterType)Random.Range(0, 6);
-                Character newCharacter = new Character(randomType);
-                characters.Add(newCharacter);
+            // Lấy một CharacterData ngẫu nhiên từ danh sách characterTemplates
+            CharacterData randomCharacterData = characterTemplates[Random.Range(0, characterTemplates.Count)];
 
-                // Tạo GameObject và cập nhật UI
-                GameObject newCharacterObj = Instantiate(characterPrefab, GetRandomPosition(), Quaternion.identity);
-                newCharacterObj.GetComponent<CharacterInfoUI>().SetCharacterInfo(newCharacter); // Giả sử có component này
+            // Tạo một ScriptableObject mới từ CharacterData
+            Character newCharacter = CreateCharacterFromData(randomCharacterData);
+
+            // Tạo một vị trí ngẫu nhiên trong vùng spawn trên màn hình
+            float randomX = Random.Range(Screen.width * 0.5f - spawnAreaWidth * 0.5f, Screen.width * 0.5f + spawnAreaWidth * 0.5f);
+            float randomY = Random.Range(Screen.height * 0.5f - spawnAreaHeight * 0.5f, Screen.height * 0.5f + spawnAreaHeight * 0.5f);
+
+            Vector3 randomScreenPosition = new Vector3(randomX, randomY, 0);
+            Vector3 spawnPosition = mainCamera.ScreenToWorldPoint(randomScreenPosition);
+            spawnPosition.z = 0; // Đảm bảo rằng nhân vật sẽ spawn ở một tầng z cố định
+
+            // Spawn nhân vật vào vị trí SpawnPoint
+            GameObject spawnedObject = Instantiate(characterPrefab, spawnPosition, Quaternion.identity);
+
+            // Thực hiện các tùy chỉnh cho đối tượng đã spawn
+            CharacterDis characterDisplay = spawnedObject.GetComponent<CharacterDis>();
+            if (characterDisplay != null)
+            {
+                characterDisplay.SetCharacterStats(randomCharacterData);
             }
+
+            // Thêm nhân vật vào danh sách đã spawn và tăng biến đếm
+            spawnedCharacters.Add(newCharacter);
+            characterCount++;
         }
-        characterUIManager.DisplayCharacters(characters);
     }
 
-    Vector3 GetRandomPosition()
+    private Character CreateCharacterFromData(CharacterData characterData)
     {
-        Camera mainCamera = Camera.main;
-        float height = 2f * mainCamera.orthographicSize;
-        float width = height * mainCamera.aspect;
+        // Tạo một Character mới từ ScriptableObject CharacterData
+        Character newCharacter = new Character(characterData.characterName, characterData.level);
 
-        
-        float x = Random.Range(mainCamera.transform.position.x - width / 2 * 0.7f, mainCamera.transform.position.x + width / 2 * 0.7f);
-        float y = Random.Range(mainCamera.transform.position.y - height / 2 * 0.7f, mainCamera.transform.position.y + height / 2 * 0.7f);
+        // Gán các giá trị từ CharacterData cho Character
+        newCharacter.health = characterData.baseHealth;
+        newCharacter.mana = characterData.baseMana;
+        newCharacter.defense = characterData.baseDefense;
+        newCharacter.attack = characterData.baseAttack;
+        newCharacter.skills = new SkillSet(
+            new Skill(characterData.normalAttack.name, characterData.normalAttack.damage),
+            new Skill(characterData.passiveSkill.name, characterData.passiveSkill.damage),
+            new Skill(characterData.activeSkill.name, characterData.activeSkill.damage)
+        );
 
-        return new Vector3(x, y, 0);
-    }
+        // Các công việc khác để khởi tạo nhân vật
 
-   
-    public void MergeCharacters()
-    {
-       
-        var mergeDict = new Dictionary<(Character.CharacterType, Character.CharacterLevel), Character>();
-
-        foreach (var character in characters)
-        {
-            var key = (character.Type, character.Level);
-
-            if (mergeDict.ContainsKey(key))
-            {
-               
-                mergeDict[key].LevelUp();
-            }
-            else
-            {
-                
-                mergeDict[key] = character;
-            }
-        }
-
-       
-        characters = new List<Character>(mergeDict.Values);
-
-       
-        characterUIManager.DisplayCharacters(characters);
+        return newCharacter;
     }
 }
